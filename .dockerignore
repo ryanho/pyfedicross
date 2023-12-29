@@ -1,0 +1,7 @@
+!Pipfile
+!Pipfile.lock
+!.vagrant
+!.idea
+!.git
+!.gitignore
+!Vagrantfile

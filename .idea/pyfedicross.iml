@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="django" name="Django">
+      <configuration>
+        <option name="rootFolder" value="$MODULE_DIR$" />
+        <option name="settingsModule" value="pyfedicross/settings.py" />
+        <option name="manageScript" value="$MODULE_DIR$/manage.py" />
+        <option name="environment" value="&lt;map/&gt;" />
+        <option name="doNotUseTestRunner" value="false" />
+        <option name="trackFilePattern" value="migrations" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.11.2 Vagrant VM at D:\Ryan Ho\Documents\proj\pyfedicross (/home/vagrant/.cache/pypoetry/virtualenvs/pyfedicross-vs8V2ZPt-py3.11/bin/python)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_CONFIGURATION" value="Django" />
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/../pyfedicross\templates" />
+      </list>
+    </option>
+  </component>
+</module>

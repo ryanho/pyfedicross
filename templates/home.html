@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        {% if user.is_authenticated %}
+        <div class="row pb-md-4 mb3 text-center">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Create Post</h5>
+                    </div>
+                    <div class="card-body">
+                        <form class="form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <textarea class="form-control" aria-label="textarea for content you want to submit" name="content" rows="6" placeholder="input something..."></textarea>
+                            </div>
+                            <div class="input-group mb-3">
+                              <label class="input-group-text" for="attachment">Upload</label>
+                              <input type="file" class="form-control" id="attachment" name="attachment" multiple>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                            Submit
+                            </button>
+                    </form>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <h2 class="display-6 text-center mb-4">社群網路</h2>
+
+    <div class="table-responsive">
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th style="width: 34%;"></th>
+            <th style="width: 22%;">內容長度限制</th>
+            <th style="width: 22%;">附加檔案數量</th>
+            <th style="width: 22%;">附加檔案類型</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              {% if request.user.app.software == 'mastodon' %}
+            <th scope="row" class="text-start">Mastodon<span class="badge bg-primary ms-2">已連接</span></th>
+            <td>500字元</td>
+            <td>4</td>
+            <td>圖片、影片、音樂、GIF</td>
+            {% elif request.user.app.software == 'misskey' %}
+            <th scope="row" class="text-start">Misskey<span class="badge bg-primary ms-2">已連接</span></th>
+            <td>3000字元</td>
+            <td>16</td>
+            <td>圖片、影片、音樂、GIF</td>
+                  {% endif %}
+          </tr>
+          <tr>
+              {% if social_network.plurk %}
+              <th scope="row" class="text-start"><a href="{% url 'social_logout' 'plurk' %}" title="刪除連接">Plurk</a><span class="badge bg-primary ms-2">已連接</span></th>
+              {% else %}
+              <th scope="row" class="text-start"><a href="{% url 'social_login' 'plurk' %}" title="連接Plurk">Plurk</a><span class="badge bg-danger ms-2">未連接</span></th>
+              {% endif %}
+            <td>360字元</td>
+            <td>無限制</td>
+            <td>圖片</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+        {% else %}
+        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+          <h1 class="display-4 fw-normal">Welcome!</h1>
+          <p class="fs-5 text-muted">This service is designed to promote the Fediverse by allowing you to cross post and link back to your main Fediverse account after logging in to your Fediverse account and other social network accounts.</p>
+        </div>
+
+        <div class="row mb-3 text-center justify-content-center">
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                  <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">Instance's Domain</h4>
+                      <small>Please enter the instance's domain you want to log in to. We only support Mastodon and Misskey for now.</small>
+                  </div>
+                  <div class="card-body">
+                    <form class="form" method="post">
+                    {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="misskey.io" aria-label="instance's domain" name="instance">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                          Login
+                        </button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+{% endblock %}
