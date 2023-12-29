@@ -18,7 +18,7 @@ class FediverseLogin:
         self.api = None
 
     def get_app(self):
-        if self.app is None or self.app.software == 'misskey':
+        if self.app is None:
             app = self.create_app()
             self.app = app
         return self.app
@@ -27,7 +27,7 @@ class FediverseLogin:
         self.software = self.check_instance()
         if self.software == 'misskey':
             self.api = Misskey(self.instance)
-            objs = FediverseApp.objects.filter(software=self.software)
+            objs = FediverseApp.objects.filter(domain=self.instance)
             if objs:
                 self.app = objs[0]
                 return self.app
@@ -35,7 +35,7 @@ class FediverseLogin:
             result = self.api.create_app(redirect_uri)
         elif self.software == 'mastodon':
             self.api = Mastodon(self.instance)
-            objs = FediverseApp.objects.filter(software=self.software)
+            objs = FediverseApp.objects.filter(domain=self.instance)
             if objs:
                 self.app = objs[0]
                 return self.app
@@ -53,6 +53,7 @@ class FediverseLogin:
             authorize_url=result['authorize_url'],
         )
         app.save()
+        self.app = app
         return app
 
     def authorize(self):

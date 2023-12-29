@@ -39,7 +39,7 @@ def home(request):
                 try:
                     app = FediverseApp.objects.get(domain=instance)
                 except FediverseApp.DoesNotExist:
-                    app = auth.get_app()
+                    app = auth.create_app()
 
                 url = auth.authorize()
 
