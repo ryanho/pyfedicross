@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from accounts.views import mylogout as logout
 from accounts.views import misskey_callback, mastodon_callback
+from ui.social_login import plurk
 
 urlpatterns = [
     path('super/', admin.site.urls),
@@ -26,6 +27,7 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('callback/misskey/', misskey_callback, name='misskey_callback'),
     path('callback/mastodon/', mastodon_callback, name='mastodon_callback'),
+    path('callback/plurk/', plurk, name='plurk_callback'),
 ]
 
 if settings.DEBUG:

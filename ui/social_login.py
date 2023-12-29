@@ -11,7 +11,8 @@ from plurk_oauth import PlurkAPI
 
 def plurk(request, redirect_uri=None):
     if redirect_uri is None:
-        redirect_uri = f'{settings.REDIRECT_DOMAIN}{reverse("social_login", kwargs={"provider_name": "plk"})}'
+        prefix = f'{request.scheme}://{request.META["HTTP_HOST"]}'
+        redirect_uri = f'{prefix}{reverse("social_login", kwargs={"provider_name": "plurk"})}'
     if 'oauth_verifier' in request.GET:
         request_token = cache.get(request.GET.get('oauth_token'))
         oauth_token = request_token['oauth_token']
@@ -61,7 +62,7 @@ def social_login(request, provider_name, redirect_uri=None):
 
 
 def social_logout(request, provider_name):
-    if provider_name == 'plk':
+    if provider_name == 'plurk':
         access_token = request.user.socialaccount_set.get(social_network=SocialNetwork.PLURK)
         client = OAuth1Client(
             settings.PLURK_CONSUMER_KEY,
@@ -73,29 +74,6 @@ def social_logout(request, provider_name):
         resp = client.get(expire_token_url)
         access_token.delete()
         return True, resp.text
-    # elif provider_name == 'twi':
-    #     try:
-    #         access_token = request.user.socialaccount_set.get(social_network=SocialNetwork.TWITTER)
-    #     except SocialAccount.DoesNotExist:
-    #         return False, 'your account not link to Twitter'
-    #     # auth = OAuth1Auth(
-    #     #     settings.TWITTER_CONSUMER_KEY,
-    #     #     settings.TWITTER_CONSUMER_SECRET,
-    #     #     token=access_token.oauth_token,
-    #     #     token_secret=access_token.oauth_token_secret,
-    #     # )
-    #     # expire_token_url = 'https://api.twitter.com/1.1/oauth/invalidate_token'
-    #     # resp = httpx.post(expire_token_url, auth=auth)
-    #     # if resp.status_code == 200:
-    #     access_token.delete()
-    #     return True, None
-    # elif provider_name == 'tmr':
-    #     try:
-    #         tmr = request.user.socialaccount_set.get(social_network=SocialNetwork.TUMBLR)
-    #         tmr.delete()
-    #         return True, None
-    #     except SocialAccount.DoesNotExist:
-    #         return False, 'your account not link to Tumblr'
     else:
         return None
 

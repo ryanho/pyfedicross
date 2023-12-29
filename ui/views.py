@@ -4,9 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from .forms import FediverseLoginForm, NewPostForm
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import login
-# from .libcrosspost import crosspost
+from .libcrosspost import crosspost
 from accounts.models import SocialNetwork, FediverseApp
-# from .social_login import Mastodon, social_logout, social_login
+from .social_login import social_logout, social_login
 from django.core.exceptions import PermissionDenied
 from .fediverse_login import FediverseLogin
 
@@ -24,8 +24,7 @@ def home(request):
             form = NewPostForm(request.POST, request.FILES)
             files = request.FILES.getlist('attachment')
             if form.is_valid():
-                # crosspost(request, form.cleaned_data, files)
-                pass
+                crosspost(request, form.cleaned_data, files)
             else:
                 return render(request, 'home.html', {'form': form, 'social_network': social_network})
         form = NewPostForm()
@@ -57,7 +56,6 @@ def connect_social_network(request, provider_name):
     if not request.user.is_authenticated:
         raise PermissionDenied('login first!')
     redirect_uri = request.GET.get('redirect_uri', None)
-    return
     result = social_login(request, provider_name, redirect_uri)
     if result is True:
         return HttpResponseRedirect('/')
@@ -69,7 +67,6 @@ def connect_social_network(request, provider_name):
 def disconnect_social_network(request, provider_name):
     if not request.user.is_authenticated:
         raise PermissionDenied('login first!')
-    return
     result, err = social_logout(request, provider_name)
     if result:
         return HttpResponseRedirect('/')
