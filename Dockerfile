@@ -10,6 +10,8 @@ ENV LANG C.UTF-8 \
     POETRY_VIRTUALENVS_CREATE=1 \
     POETRY_CACHE_DIR=/tmp/poetry_cache
 
+RUN pip install poetry
+
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
