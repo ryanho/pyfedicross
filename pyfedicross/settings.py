@@ -24,7 +24,12 @@ env = environ.Env(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env()
+if bool(os.environ.get('DOCKER_ENVIRON', False)) is False:
+    environ.Env.read_env()
+    STATIC_ROOT = BASE_DIR / 'static/'
+else:
+    environ.Env.read_env('/data/.env')
+    STATIC_ROOT = '/data/static/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -128,7 +133,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'src/',
 ]

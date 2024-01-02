@@ -1,5 +1,7 @@
 FROM python:3.11-slim
 
+ENV DOCKER_ENVIRON=1
+
 RUN pip install poetry
 
 WORKDIR /app
