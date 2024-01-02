@@ -29,6 +29,6 @@ server {
     # Finally, send all non-media requests to the Django server.
     location / {
         proxy_set_header        Host $host;
-        proxy_pass django;
+        proxy_pass http://django;
     }
 }
