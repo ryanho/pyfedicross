@@ -1,0 +1,34 @@
+version: '3'
+services:
+  app:
+    restart: always
+    build: .
+    #image: pyfedicross
+    networks:
+      external_network:
+    volumes:
+      - ./data:/data
+    logging:
+      options:
+        max-size: 10m
+
+  proxy:
+    image: nginx
+    depends_on:
+      - app
+    volumes:
+      - type: bind
+        source: app.template
+        target: /etc/nginx/conf.d/app.conf
+      - ./data/static:/static
+      #- ./data/media:/media
+    ports:
+     - "80:80"
+    networks:
+      #- shared
+      - external_network
+
+networks:
+  external_network:
+#  shared:
+#    external: true
