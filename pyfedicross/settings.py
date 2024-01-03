@@ -17,8 +17,9 @@ import os
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
-    PLURK_CONSUMER_KEY=(str, None),
-    PLURK_CONSUMER_SECRET=(str, None),
+    PLURK_CONSUMER_KEY=(str, ''),
+    PLURK_CONSUMER_SECRET=(str, ''),
+    CSRF_TRUSTED_ORIGINS=(list, []),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -182,3 +183,5 @@ AUTHENTICATION_BACKENDS = [
     'accounts.backends.FediverseBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
