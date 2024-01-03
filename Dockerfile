@@ -14,6 +14,7 @@ COPY . /app
 EXPOSE 8000
 VOLUME ["/data"]
 
+RUN chmod +x /app/start.sh
+
 # Run the application
-ENTRYPOINT ["python"]
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["/app/start.sh"]
