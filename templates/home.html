@@ -87,6 +87,8 @@
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="misskey.io" aria-label="instance's domain" name="instance">
                         </div>
+                        <p>{{ form.instance.errors }}</p>
+                        <p>{{ form.non_field_errors }}</p>
                         <button type="submit" class="btn btn-primary">
                           Login
                         </button>
@@ -96,4 +98,15 @@
             </div>
         </div>
         {% endif %}
+{% endblock %}
+
+{% block bottom %}
+    <script>
+    let msg = "{{ alert }}"
+    window.addEventListener('load', function () {
+      if (typeof msg === "string" && msg.length !== 0) {
+        alert(msg)
+      }
+    })
+    </script>
 {% endblock %}

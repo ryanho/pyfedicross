@@ -1,4 +1,3 @@
-{% load bootstrap5 %}
                     <form class="form" hx-post="{{ action }}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="misskey.io" aria-label="instance's domain" name="instance">

@@ -1,3 +1,4 @@
+import httpx
 from django.shortcuts import render
 from django.http import HttpRequest
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
@@ -39,7 +40,10 @@ def home(request):
                 try:
                     app = FediverseApp.objects.get(domain=instance)
                 except FediverseApp.DoesNotExist:
-                    app = auth.create_app()
+                    try:
+                        app = auth.create_app()
+                    except httpx.ConnectError:
+                        return render(request, 'home.html', {'form': form, 'action': action, 'alert': '網域名稱不存在'})
 
                 url = auth.authorize()
 
@@ -47,7 +51,7 @@ def home(request):
                 request.session['instance'] = instance
                 return HttpResponseRedirect(url)
             else:
-                return render(request, 'login_form.html', {'form': form, 'action': action})
+                return render(request, 'home.html', {'form': form, 'action': action})
         form = FediverseLoginForm()
         return render(request, 'home.html', {'form': form, 'action': action})
 
