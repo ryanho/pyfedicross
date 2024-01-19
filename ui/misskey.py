@@ -7,7 +7,6 @@ class Misskey:
     def __init__(self, instance):
         self.instance = instance
 
-    @async_to_sync
     async def get_session(self, app_secret):
         async with httpx.AsyncClient() as client:
             r = await client.post(
@@ -32,7 +31,7 @@ class Misskey:
             data = r.json()
             app_secret = data['secret']
 
-            data = self.get_session(app_secret)
+            data = await self.get_session(app_secret)
 
             return {'client_secret': app_secret, 'client_id': data['token'], 'authorize_url': data['url'], 'detail': data}
 

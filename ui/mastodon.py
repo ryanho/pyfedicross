@@ -18,7 +18,6 @@ class Mastodon:
                 }
             )
             data = r.json()
-            r.close()
 
             client_secret = data['client_secret']
             client_id = data['client_id']

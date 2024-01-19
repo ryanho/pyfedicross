@@ -60,7 +60,7 @@ class FediverseLogin:
     def authorize(self):
         app = self.get_app()
         if app.software == 'misskey':
-            session = self.api.get_session(app.client_secret)
+            session = async_to_sync(self.api.get_session)(app.client_secret)
             return session['url']
         return app.authorize_url
 
