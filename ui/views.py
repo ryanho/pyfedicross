@@ -29,10 +29,7 @@ def home(request):
             else:
                 return render(request, 'post_form.html', {'form': form, 'social_network': social_network})
         form = NewPostForm()
-        if request.htmx:
-            return render(request, 'post_form.html', {'form': form, 'social_network': social_network})
-        else:
-            return render(request, 'home.html', {'form': form, 'social_network': social_network})
+        return render(request, 'home.html', {'form': form, 'social_network': social_network})
     else:
         if request.method == 'POST':
             form = FediverseLoginForm(request.POST)

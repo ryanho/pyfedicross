@@ -334,21 +334,6 @@ docs = ["furo (>=2021.8.17b43,<2021.9.dev0)", "sphinx (>=3.5.0)", "sphinx-notfou
 testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)"]
 
 [[package]]
-name = "django-htmx"
-version = "1.17.2"
-description = "Extensions for using Django with htmx."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "django-htmx-1.17.2.tar.gz", hash = "sha256:4089f2ed38727e9846c2f4cd1daddf6b010c7be8d834cfbcffc8c5ecf445c04e"},
-    {file = "django_htmx-1.17.2-py3-none-any.whl", hash = "sha256:f4971432d2ca45dbb31d9b58add1c50ae54354afe4bf59cafd591b1711b502c0"},
-]
-
-[package.dependencies]
-asgiref = ">=3.6"
-Django = ">=3.2"
-
-[[package]]
 name = "gunicorn"
 version = "21.2.0"
 description = "WSGI HTTP Server for UNIX"
@@ -730,4 +715,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8f9080925af4f25a5b2026083b32dc593f99e6046649fd5de331c4981bb87cf4"
+content-hash = "3366e15714a5913bfd607af03d0a68f706ad07c2efa0d9326697b5e96f9a0a1e"

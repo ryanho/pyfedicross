@@ -3,7 +3,7 @@
                         <h5 class="card-title">Create Post</h5>
                     </div>
                     <div class="card-body">
-                        <form class="form" hx-post="." hx-encoding='multipart/form-data' hx-target="#post_form">
+                        <form class="form" enctype='multipart/form-data' method="post">
                             {% csrf_token %}
                             <div class="input-group mb-3">
                                 <textarea class="form-control" aria-label="textarea for content you want to submit" name="content" rows="6" placeholder="write something..."></textarea>
