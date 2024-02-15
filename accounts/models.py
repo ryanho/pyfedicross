@@ -11,6 +11,7 @@ class FediverseApp(models.Model):
     client_id = models.CharField('Client ID', max_length=255)
     client_secret = models.CharField('Client Secret', max_length=255)
     authorize_url = models.URLField('Authorize Url', max_length=500)
+    webhook_secret = models.CharField('Webhook Secret', max_length=255, blank=True)
 
     class Meta:
         verbose_name = 'Fediverse application'
