@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+          <h1 class="display-4 fw-normal">Webhook settings</h1>
+        </div>
+
+        <div class="row mb-3 text-center justify-content-center">
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                  <div class="card-header py-3">
+                    <h4 class="my-0 fw-normal">webhook secret</h4>
+                      <small>Webhook url: {{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'webhook' %}</small>
+                  </div>
+                  <div class="card-body">
+                    <form class="form" method="post">
+                    {% csrf_token %}
+                        <div class="input-group mb-3" id="{{ form.webhook_secret.id_for_label }}">
+                            {{ form.webhook_secret }}
+                        </div>
+                        <p>{{ form.webhook_secret.errors }}</p>
+                        <p>{{ form.non_field_errors }}</p>
+                        <button type="submit" class="btn btn-primary">
+                          Submit
+                        </button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block bottom %}
+    <script>
+    let msg = "{{ alert }}"
+    window.addEventListener('load', function () {
+      if (typeof msg === "string" && msg.length !== 0) {
+        alert(msg)
+      }
+    })
+    </script>
+{% endblock %}

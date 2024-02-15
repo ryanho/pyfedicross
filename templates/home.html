@@ -29,7 +29,7 @@
             <td>4</td>
             <td>Video/Music/Image/GIF</td>
             {% elif request.user.app.software == 'misskey' %}
-            <th scope="row" class="text-start">Misskey<span class="badge bg-primary ms-2">Connected</span></th>
+                  <th scope="row" class="text-start">Misskey<span class="badge bg-primary ms-2">Connected</span>&nbsp;<a href="{% url 'webhook_settings' %}">⚙</a></th>
             <td>3000 characters</td>
             <td>16</td>
             <td>Video/Music/Image/GIF</td>

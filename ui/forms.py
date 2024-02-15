@@ -1,5 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
+from accounts.models import FediverseApp
 
 
 class FediverseLoginForm(forms.Form):
@@ -14,3 +15,11 @@ class FediverseLoginForm(forms.Form):
 class NewPostForm(forms.Form):
     content = forms.CharField(label='Content', widget=forms.Textarea)
     attachment = forms.FileField(label='Upload files', widget=forms.ClearableFileInput(), required=False)
+
+
+class WebhookSecretForm(forms.ModelForm):
+    webhook_secret = forms.CharField(label='Webhook', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'webhook secret'}), required=False)
+
+    class Meta:
+        model = FediverseApp
+        fields = ['webhook_secret',]
