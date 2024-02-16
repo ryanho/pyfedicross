@@ -108,12 +108,13 @@ def webhook(request):
                 result['body']['note']['visibility'] == 'public'):
             content = result['body']['note']['text']
             files = []
-            note_url = f"https://{result['server']}/notes/{result['body']['note']['id']}"
+            note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
             if len(result['body']['note']['files']) > 0:
                 files = [file['thumbnailUrl'] for file in result['body']['note']['files']]
 
-            plurk = user.socialaccount_set.filter(provider=SocialNetwork.PLURK)
+            plurk = user.socialaccount_set.filter(social_network=SocialNetwork.PLURK)
             if plurk:
-                post_to_plurk.send(plurk, content, files, note_url)
+                post_to_plurk.send(plurk.values()[0], content, files, note_url)
+        return HttpResponse('OK')
     else:
         return HttpResponse(status=405)

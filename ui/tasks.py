@@ -18,8 +18,8 @@ def post_to_plurk(auth, content, file_detail, toot_url):
     cauth = OAuth1Auth(
         settings.PLURK_CONSUMER_KEY,
         settings.PLURK_CONSUMER_SECRET,
-        token=auth.oauth_token,
-        token_secret=auth.oauth_token_secret,
+        token=auth['oauth_token'],
+        token_secret=auth['oauth_token_secret'],
     )
     post_url = 'https://www.plurk.com/APP/Timeline/plurkAdd'
     uri, headers, body = cauth.sign(
