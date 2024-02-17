@@ -11,6 +11,7 @@ from .fediverse_login import FediverseLogin
 import json
 from .tasks import post_to_plurk
 from .forms import WebhookSecretForm
+import re
 
 # Create your views here.
 
@@ -106,7 +107,7 @@ def webhook(request):
 
         if (result['body']['note']['replyId'] is None and result['body']['note']['renoteId'] is None and
                 result['body']['note']['visibility'] == 'public'):
-            content = result['body']['note']['text']
+            content = re.sub(r'@\w+', '', result['body']['note']['text'])
             files = []
             note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
             if len(result['body']['note']['files']) > 0:
