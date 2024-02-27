@@ -95,7 +95,7 @@ async def post_to_plurk(auth, content, file_detail, toot_url, is_sensitive=False
             'POST',
             post_url,
             {'Content-Type': 'application/x-www-form-urlencoded'},
-            {'content': post_content, 'qualifier': 'says'}
+            {'content': post_content, 'qualifier': 'says', 'porn': is_sensitive}
         )
         resp = await client.post(uri, headers=headers, data=body, timeout=300)
         if resp.status_code == 200:
