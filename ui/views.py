@@ -107,7 +107,12 @@ def webhook(request):
 
         if (result['body']['note']['replyId'] is None and result['body']['note']['renoteId'] is None and
                 result['body']['note']['visibility'] == 'public'):
+            is_sensitive = False
+
             content = re.sub(r'@\w+', '', result['body']['note']['text'])
+            if result['body']['note']['cw']:
+                content = result['body']['note']['cw'] + '\n' + content
+                is_sensitive = True
             files = []
             note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
             if len(result['body']['note']['files']) > 0:
@@ -115,7 +120,7 @@ def webhook(request):
 
             plurk = user.socialaccount_set.filter(social_network=SocialNetwork.PLURK)
             if plurk:
-                post_to_plurk.send(plurk.values()[0], content, files, note_url)
+                post_to_plurk.send(plurk.values()[0], content, files, note_url, is_sensitive)
         return HttpResponse('OK')
     else:
         return HttpResponse(status=405)

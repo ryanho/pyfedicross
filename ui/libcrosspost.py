@@ -63,17 +63,27 @@ async def post_to_mstdn(domain, token, content, files=None):
 
 
 @async_to_sync
-async def post_to_plurk(auth, content, file_detail, toot_url):
+async def post_to_plurk(auth, content, file_detail, toot_url, is_sensitive=False):
     async with httpx.AsyncClient() as client:
         mstdn_content = ''
         if file_detail:
             for i in file_detail:
                 mstdn_content += f' {i}'
-        mstdn_content += f' \n\n{toot_url}'
-        #if len(content) > 360:
-        #    mstdn_content = '... ' + mstdn_content
-        #max_length = 360 - len(mstdn_content)
-        content = content + mstdn_content
+        mstdn_content += f'\n\n{toot_url}'
+
+        # plurk的url以31個字元計算，在貼文中前面會加上一個空白，所以是32
+        plurk_url_length = 32
+        # 33是toot_url的長度（31 + 2）
+        url_length = len(file_detail) * plurk_url_length + 33
+        content_length = len(content)
+        total_length = content_length + url_length
+        # plurk的內容長度限制是360個字元
+        if total_length > 360:
+            content_length = content_length - (total_length - 360 + 3)
+            post_content = content[:content_length] + '...' + mstdn_content
+        else:
+            post_content = content + mstdn_content
+
         cauth = OAuth1Auth(
             settings.PLURK_CONSUMER_KEY,
             settings.PLURK_CONSUMER_SECRET,
@@ -85,7 +95,7 @@ async def post_to_plurk(auth, content, file_detail, toot_url):
             'POST',
             post_url,
             {'Content-Type': 'application/x-www-form-urlencoded'},
-            {'content': content, 'qualifier': 'says'}
+            {'content': post_content, 'qualifier': 'says', 'porn': is_sensitive}
         )
         resp = await client.post(uri, headers=headers, data=body, timeout=300)
         if resp.status_code == 200:
