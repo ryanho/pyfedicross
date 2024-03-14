@@ -108,7 +108,7 @@ def webhook(request):
         if result['body']['note']['replyId'] is None and result['body']['note']['visibility'] == 'public':
             is_sensitive = False
             qualifier = 'says'
-            content = re.sub(r'@\w+', '', result['body']['note']['text'])
+            content = re.sub(r'@\w+', '', result['body']['note'].get('text', ''))
 
             emojis = result['body']['note'].get('emojis', list())
             for name in emojis:
