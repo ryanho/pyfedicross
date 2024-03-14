@@ -119,26 +119,34 @@ def webhook(request):
         if result['body']['note']['replyId'] is None and result['body']['note']['visibility'] == 'public':
             is_sensitive = False
             qualifier = 'says'
-            if result['body']['note'].get('text', '') is None:
-                content = ''
-            else:
-                content = re.sub(r'@\w+', '', result['body']['note'].get('text', ''))
+            content = result['body']['note']['text']
+            note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
+            note_files = result['body']['note'].get('files', list())
+            renote_id = result['body']['note']['renoteId']
 
-            emojis = result['body']['note'].get('emojis', list())
-            for name in emojis:
-                content = content.replace(f':{name}:', f' {emojis[name]} ')
-
-            if result['body']['note']['renoteId']:
+            # 轉發或引用
+            if renote_id:
                 qualifier = 'shares'
-                note_url = result['body']['note']['renote']['uri']
-            else:
-                note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
+                note_files += result['body']['note']['renote']['files']
+                # 如果是轉發但轉發的貼文沒有附件
+                if content is None and len(note_files) == 0:
+                    return HttpResponse('OK')
+
+            if content is None:
+                content = ''
+
+            if content:
+                content = re.sub(r'@\w+', '', content)
+                emojis = result['body']['note'].get('emojis', list())
+                for name in emojis:
+                    content = content.replace(f':{name}:', f' {emojis[name]} ')
 
             if result['body']['note']['cw']:
                 content = result['body']['note']['cw'] + '\n' + content
                 is_sensitive = True
+
             files = []
-            if len(result['body']['note']['files']) > 0:
+            if len(note_files) > 0:
                 files = [file['thumbnailUrl'] for file in result['body']['note']['files']]
 
             plurk = user.socialaccount_set.filter(social_network=SocialNetwork.PLURK)
