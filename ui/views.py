@@ -19,6 +19,12 @@ import re
 
 def home(request):
     action = '.'
+    user = User.objects.get(id=request.user.id)
+    if user.app.webhook_secret:
+        context = {'webhook_is_set': True}
+    else:
+        context = {'webhook_is_set': False}
+
     if request.user.is_authenticated:
         sa = request.user.socialaccount_set.all()
         social_network = {
@@ -30,9 +36,11 @@ def home(request):
             if form.is_valid():
                 crosspost(request, form.cleaned_data, files)
             else:
-                return render(request, 'post_form.html', {'form': form, 'social_network': social_network})
+                context.update({'form': form, 'social_network': social_network})
+                return render(request, 'post_form.html', context)
         form = NewPostForm()
-        return render(request, 'home.html', {'form': form, 'social_network': social_network})
+        context.update({'form': form, 'social_network': social_network})
+        return render(request, 'home.html', context)
     else:
         if request.method == 'POST':
             form = FediverseLoginForm(request.POST)
@@ -46,7 +54,8 @@ def home(request):
                     try:
                         app = auth.create_app()
                     except httpx.ConnectError:
-                        return render(request, 'home.html', {'form': form, 'action': action, 'alert': '網域名稱不存在'})
+                        context.update({'form': form, 'action': action, 'alert': '網域名稱不存在'})
+                        return render(request, 'home.html', context)
 
                 url = auth.authorize()
 
@@ -54,9 +63,11 @@ def home(request):
                 request.session['instance'] = instance
                 return HttpResponseRedirect(url)
             else:
-                return render(request, 'home.html', {'form': form, 'action': action})
+                context.update({'form': form, 'action': action})
+                return render(request, 'home.html', context)
         form = FediverseLoginForm()
-        return render(request, 'home.html', {'form': form, 'action': action})
+        context.update({'form': form, 'action': action})
+        return render(request, 'home.html', context)
 
 
 def connect_social_network(request, provider_name):
