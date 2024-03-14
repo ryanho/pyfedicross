@@ -37,7 +37,7 @@ def home(request):
                 crosspost(request, form.cleaned_data, files)
             else:
                 context.update({'form': form, 'social_network': social_network})
-                return render(request, 'post_form.html', context)
+                return render(request, 'home.html', context)
         form = NewPostForm()
         context.update({'form': form, 'social_network': social_network})
         return render(request, 'home.html', context)

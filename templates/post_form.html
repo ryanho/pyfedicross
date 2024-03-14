@@ -4,9 +4,14 @@
                     </div>
                     <div class="card-body">
                         <form class="form" enctype='multipart/form-data' method="post">
+                            <fieldset {% if webhook_is_set %}disabled{% endif %}>
                             {% csrf_token %}
                             <div class="input-group mb-3">
+                                {% if webhook_is_set %}
+                                <textarea class="form-control" aria-label="Because webhook is set, form is disable." name="content" rows="6" placeholder="Because webhook is set, form is disable."></textarea>
+                                {% else %}
                                 <textarea class="form-control" aria-label="textarea for content you want to submit" name="content" rows="6" placeholder="write something..."></textarea>
+                                {% endif %}
                             </div>
                             <div class="input-group mb-3">
                               <label class="input-group-text" for="attachment">Upload</label>
@@ -15,6 +20,7 @@
                             <button type="submit" class="btn btn-primary">
                             Submit
                             </button>
+                            </fieldset>
                         </form>
                     </div>
                 </div>

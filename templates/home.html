@@ -66,15 +66,11 @@
                     <form class="form" method="post">
                     {% csrf_token %}
                         <div class="input-group mb-3">
-                            {% if webhook_is_set %}
-                            <input type="text" class="form-control" placeholder="Because webhook is set, form is disable." aria-label="instance's domain" name="instance" disabled>
-                            {% else %}
                             <input type="text" class="form-control" placeholder="misskey.io" aria-label="instance's domain" name="instance">
-                            {% endif %}
                         </div>
                         <p>{{ form.instance.errors }}</p>
                         <p>{{ form.non_field_errors }}</p>
-                        <button type="submit" class="btn btn-primary" {% if webhook_is_set %}disabled{% endif %}>
+                        <button type="submit" class="btn btn-primary">
                           Login
                         </button>
                     </form>
