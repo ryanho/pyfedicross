@@ -13,6 +13,7 @@ from .tasks import post_to_plurk
 from .forms import WebhookSecretForm
 import re
 
+
 # Create your views here.
 
 
@@ -83,7 +84,6 @@ def webhook_settings(request):
     if not request.user.is_authenticated:
         return redirect('/')
 
-
     user = User.objects.get(id=request.user.id)
     if request.method == 'POST':
         form = WebhookSecretForm(request.POST, instance=user.app)
@@ -105,22 +105,31 @@ def webhook(request):
         result = json.loads(request.body)
         user = get_object_or_404(User, app__software='misskey', app__webhook_secret=secret)
 
-        if (result['body']['note']['replyId'] is None and result['body']['note']['renoteId'] is None and
-                result['body']['note']['visibility'] == 'public'):
+        if result['body']['note']['replyId'] is None and result['body']['note']['visibility'] == 'public':
             is_sensitive = False
-
+            qualifier = 'says'
             content = re.sub(r'@\w+', '', result['body']['note']['text'])
+
+            emojis = result['body']['note'].get('emojis', list())
+            for name in emojis:
+                content = content.replace(f':{name}:', f' {emojis[name]} ')
+
+            if result['body']['note']['renoteId']:
+                qualifier = 'shares'
+                note_url = result['body']['note']['renote']['uri']
+            else:
+                note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
+
             if result['body']['note']['cw']:
                 content = result['body']['note']['cw'] + '\n' + content
                 is_sensitive = True
             files = []
-            note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
             if len(result['body']['note']['files']) > 0:
                 files = [file['thumbnailUrl'] for file in result['body']['note']['files']]
 
             plurk = user.socialaccount_set.filter(social_network=SocialNetwork.PLURK)
             if plurk:
-                post_to_plurk.send(plurk.values()[0], content, files, note_url, is_sensitive)
+                post_to_plurk.send(plurk.values()[0], qualifier, content, files, note_url, is_sensitive)
         return HttpResponse('OK')
     else:
         return HttpResponse(status=405)
