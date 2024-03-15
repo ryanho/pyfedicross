@@ -19,13 +19,14 @@ import re
 
 def home(request):
     action = '.'
-    user = User.objects.get(id=request.user.id)
-    if user.app.webhook_secret:
-        context = {'webhook_is_set': True}
-    else:
-        context = {'webhook_is_set': False}
 
     if request.user.is_authenticated:
+        user = User.objects.get(id=request.user.id)
+        if user.app.webhook_secret:
+            context = {'webhook_is_set': True}
+        else:
+            context = {'webhook_is_set': False}
+
         sa = request.user.socialaccount_set.all()
         social_network = {
             'plurk': sa.filter(social_network=SocialNetwork.PLURK)
@@ -54,8 +55,7 @@ def home(request):
                     try:
                         app = auth.create_app()
                     except httpx.ConnectError:
-                        context.update({'form': form, 'action': action, 'alert': '網域名稱不存在'})
-                        return render(request, 'home.html', context)
+                        return render(request, 'home.html', {'form': form, 'action': action, 'alert': '網域名稱不存在'})
 
                 url = auth.authorize()
 
@@ -63,11 +63,9 @@ def home(request):
                 request.session['instance'] = instance
                 return HttpResponseRedirect(url)
             else:
-                context.update({'form': form, 'action': action})
-                return render(request, 'home.html', context)
+                return render(request, 'home.html', {'form': form, 'action': action})
         form = FediverseLoginForm()
-        context.update({'form': form, 'action': action})
-        return render(request, 'home.html', context)
+        return render(request, 'home.html', {'form': form, 'action': action})
 
 
 def connect_social_network(request, provider_name):
