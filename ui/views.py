@@ -10,7 +10,8 @@ from django.core.exceptions import PermissionDenied
 from .fediverse_login import FediverseLogin
 import json
 from .tasks import post_to_plurk
-from .forms import WebhookSecretForm
+from .forms import WebhookForm
+import secrets
 import re
 
 
@@ -94,13 +95,21 @@ def webhook_settings(request):
         return redirect('/')
 
     user = User.objects.get(id=request.user.id)
+    secret = user.app.webhook_secret
     if request.method == 'POST':
-        form = WebhookSecretForm(request.POST, instance=user.app)
+        form = WebhookForm(request.POST)
         if form.is_valid():
-            form.save()
+            if form.cleaned_data['method'] == 'create':
+                secret = secrets.token_urlsafe()
+                user.app.webhook_secret = secret
+                user.app.save()
+            elif form.cleaned_data['method'] == 'delete':
+                user.app.webhook_secret = ''
+                user.app.save()
+                secret = ''
     else:
-        form = WebhookSecretForm(instance=user.app)
-    return render(request, 'webhook_setings.html', {'form': form})
+        form = WebhookForm()
+    return render(request, 'webhook_setings.html', {'form': form, 'secret': secret})
 
 
 @csrf_exempt

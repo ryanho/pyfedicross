@@ -17,9 +17,5 @@ class NewPostForm(forms.Form):
     attachment = forms.FileField(label='Upload files', widget=forms.ClearableFileInput(), required=False)
 
 
-class WebhookSecretForm(forms.ModelForm):
-    webhook_secret = forms.CharField(label='Webhook', widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'webhook secret'}), required=False)
-
-    class Meta:
-        model = FediverseApp
-        fields = ['webhook_secret',]
+class WebhookForm(forms.Form):
+    method = forms.CharField()

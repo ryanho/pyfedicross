@@ -10,19 +10,23 @@
                 <div class="card mb-4 rounded-3 shadow-sm">
                   <div class="card-header py-3">
                     <h4 class="my-0 fw-normal">webhook secret</h4>
-                      <small>Webhook url: {{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'webhook' %}</small>
+                      <small>Webhook url: https://{{ request.META.HTTP_HOST }}{% url 'webhook' %}</small>
                   </div>
                   <div class="card-body">
                     <form class="form" method="post">
                     {% csrf_token %}
-                        <div class="input-group mb-3" id="{{ form.webhook_secret.id_for_label }}">
-                            {{ form.webhook_secret }}
-                        </div>
-                        <p>{{ form.webhook_secret.errors }}</p>
-                        <p>{{ form.non_field_errors }}</p>
+                        {% if secret %}
+                            <p>Your webhook secret<br>{{ secret }}</p>
+                        <input type="hidden" name="method" value="delete">
                         <button type="submit" class="btn btn-primary">
-                          Submit
+                          Delete secret
                         </button>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary">
+                          Create secret
+                        </button>
+                        <input type="hidden" name="method" value="create">
+                        {% endif %}
                     </form>
                   </div>
                 </div>
