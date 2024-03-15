@@ -136,9 +136,13 @@ def webhook(request):
 
             if content:
                 content = re.sub(r'@\w+', '', content)
-                emojis = result['body']['note'].get('emojis', list())
-                for name in emojis:
-                    content = content.replace(f':{name}:', f' {emojis[name]} ')
+                raw_emojis = re.findall(r':\w+:', content)
+                if raw_emojis:
+                    r = httpx.get(f"{result['server']}/api/emojis")
+                    emojis = r.json()['emojis']
+                    for raw in raw_emojis:
+                        item = next(item for item in emojis if item["name"] == raw.strip(':'))
+                        content = content.replace(raw, f' {item["url"]} ')
 
             if result['body']['note']['cw']:
                 content = result['body']['note']['cw'] + '\n' + content
