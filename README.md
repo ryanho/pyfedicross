@@ -21,7 +21,7 @@
 
 完成後就可以從上方的表單同步發布貼文到聯邦宇宙與社群網路。
 
-## 使用Misskey的Webhook來同發布發貼文到社群網路
+## 使用Misskey的Webhook來同步發貼文到社群網路
 如果登入的聯邦宇宙平台是Misskey，在首頁下方Misskey名稱的旁邊會出現一個齒輪圖示，點擊可以設置webhook secret與取得webhook url。
 
 取得webhook secret與url後，到Misskey頁面上，點擊左邊選單的「設定/其他設定/Webhook」，點擊「建立webhook」，名稱可以輸入「fedicross」，然後輸入剛剛取得的secret與url。在「何時運行webhook」，只打開「當發布貼文時」這個選項，其他關閉。到此就設定完成，之後可以在此開啟或關閉webhook。
