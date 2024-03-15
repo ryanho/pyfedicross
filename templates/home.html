@@ -37,9 +37,9 @@
           </tr>
           <tr>
               {% if social_network.plurk %}
-              <th scope="row" class="text-start"><a href="{% url 'social_logout' 'plurk' %}" title="刪除連接">Plurk</a><span class="badge bg-primary ms-2">Connected</span></th>
+              <th scope="row" class="text-start"><a href="{% url 'social_logout' 'plurk' %}" title="disconnect">Plurk</a><span class="badge bg-primary ms-2">Connected</span></th>
               {% else %}
-              <th scope="row" class="text-start"><a href="{% url 'social_login' 'plurk' %}" title="連接Plurk">Plurk</a><span class="badge bg-danger ms-2">Disconnect</span></th>
+              <th scope="row" class="text-start"><a href="{% url 'social_login' 'plurk' %}" title="connect Plurk">Plurk</a><span class="badge bg-danger ms-2">Disconnect</span></th>
               {% endif %}
             <td>360 characters</td>
             <td>Unlimited</td>
