@@ -144,6 +144,11 @@ def webhook(request):
                 content = ''
 
             if content:
+                mention_user = re.findall(r'@\w+', content)
+                if mention_user:
+                    for at_user in mention_user:
+                        content = content.replace(at_user, f"<a href=\"{result['server']}/{at_user}\">{at_user}</a>")
+
                 content = re.sub(r'@\w+', '', content)
                 raw_emojis = re.findall(r':\w+:', content)
                 if raw_emojis:
