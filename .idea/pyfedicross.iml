@@ -14,7 +14,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.11 (pyfedicross-Rx5fAw2p-py3.11)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.11.2 Vagrant VM at D:\Ryan Ho\Documents\proj\pyfedicross (/home/vagrant/.cache/pypoetry/virtualenvs/pyfedicross-vs8V2ZPt-py3.11/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">
