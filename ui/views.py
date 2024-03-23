@@ -163,7 +163,7 @@ def webhook(request):
 
             files = []
             if len(note_files) > 0:
-                files = [file['thumbnailUrl'] for file in result['body']['note']['files']]
+                files = [file['url'] for file in result['body']['note']['files']]
 
             plurk = user.socialaccount_set.filter(social_network=SocialNetwork.PLURK)
             if plurk:
