@@ -149,7 +149,6 @@ def webhook(request):
                     for at_user in mention_user:
                         content = content.replace(at_user, f"<a href=\"{result['server']}/{at_user}\">{at_user}</a>")
 
-                content = re.sub(r'@\w+', '', content)
                 raw_emojis = re.findall(r':\w+:', content)
                 if raw_emojis:
                     r = httpx.get(f"{result['server']}/api/emojis")
