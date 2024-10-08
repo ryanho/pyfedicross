@@ -34,8 +34,8 @@ def plurk(request, redirect_uri=None):
             defaults={
                 'oauth_token': token['oauth_token'],
                 'oauth_token_secret': token['oauth_token_secret'],
-                'detail': {'id': user_info['id'], 'name': user_info['nick_name']}
-            }
+            },
+            extra_data=user_info,
         )
 
         return True
