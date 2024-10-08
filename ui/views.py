@@ -168,7 +168,7 @@ def webhook(request):
             plurk = user.socialaccount_set.filter(social_network=SocialNetwork.PLURK)
             if plurk:
                 content = re.sub(r'\*\*(.*?)\*\*', lambda m: f"__{m.group(1)}__", content)
-                lang = plurk.extra_data.get('default_lang', 'en')
+                lang = plurk[0].extra_data.get('default_lang', 'en')
                 post_to_plurk.send(plurk.values()[0], qualifier, lang, content, files, note_url, is_sensitive)
         return HttpResponse('OK')
     else:
