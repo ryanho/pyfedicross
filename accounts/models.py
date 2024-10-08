@@ -44,7 +44,7 @@ class SocialAccount(models.Model):
         verbose_name = '社群網站帳號'
 
     def __str__(self):
-        return self.social_network
+        return f'{self.user}: {self.social_network}'
 
 
 class ExpireToken(models.Model):
