@@ -19,6 +19,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     PLURK_CONSUMER_KEY=(str, ''),
     PLURK_CONSUMER_SECRET=(str, ''),
+    DRAMATIQ_BROKER_URL=(str, 'localhost:6379')
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -185,7 +186,7 @@ SESSION_COOKIE_AGE = 315360000  # 10 years
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.redis.RedisBroker",
     "OPTIONS": {
-        "url": "redis://localhost:6379",
+        "url": f"redis://{env('DRAMATIQ_BROKER_URL')}",
     },
     "MIDDLEWARE": [
         "dramatiq.middleware.Prometheus",

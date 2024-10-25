@@ -1,11 +1,23 @@
-version: '3'
 services:
+  redis:
+    restart: always
+    image: redis:alpine
+    networks:
+      - internal_network
+    volumes:
+      - ./redis:/data
+    logging:
+      options:
+        max-size: 10m
+
   app:
     restart: always
+    depends_on:
+      - redis
     build: .
     #image: pyfedicross
     networks:
-      external_network:
+      - internal_network
     volumes:
       - ./data:/data
     logging:
@@ -27,8 +39,11 @@ services:
     networks:
       #- shared
       - external_network
+      - internal_network
 
 networks:
   external_network:
+  internal_network:
+    internal: true
 #  shared:
 #    external: true
