@@ -163,7 +163,10 @@ def webhook(request):
 
             files = []
             if len(note_files) > 0:
-                files = [file['url'] for file in result['body']['note']['files']]
+                for file in result['body']['note']['files']:
+                    if is_sensitive is False and file['isSensitive'] is True:
+                        is_sensitive = True
+                    files.append(file['url'])
 
             plurk = user.socialaccount_set.filter(social_network=SocialNetwork.PLURK)
             if plurk:

@@ -6,6 +6,10 @@ import dramatiq
 
 @dramatiq.actor
 def post_to_plurk(auth, qualifier, lang, content, file_detail, toot_url, is_sensitive=False):
+    porn = 0
+    if is_sensitive:
+        porn = 1
+
     mstdn_content = ''
     if file_detail:
         for i in file_detail:
@@ -36,7 +40,7 @@ def post_to_plurk(auth, qualifier, lang, content, file_detail, toot_url, is_sens
         'POST',
         post_url,
         {'Content-Type': 'application/x-www-form-urlencoded'},
-        {'content': post_content, 'qualifier': qualifier, 'land': lang}
+        {'content': post_content, 'qualifier': qualifier, 'land': lang, 'porn': porn}
     )
     resp = httpx.post(uri, headers=headers, data=body, timeout=300)
     if resp.status_code == 200:
