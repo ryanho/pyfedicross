@@ -144,7 +144,7 @@ def webhook(request):
                 content = ''
 
             if content:
-                mention_user = re.findall(r'\s?@[\w-]+\s', content)
+                mention_user = re.findall(r'@[\w.-]+(?:@[\w.-]+\.\w+)?', content)
                 if mention_user:
                     for at_user in mention_user:
                         content = content.replace(at_user, f"[{at_user}]({result['server']}/{at_user})")
