@@ -1,25 +1,23 @@
 import httpx
 import hashlib
-from asgiref.sync import async_to_sync
 
 
 class Misskey:
     def __init__(self, instance):
         self.instance = instance
 
-    async def get_session(self, app_secret):
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
+    def get_session(self, app_secret):
+        with httpx.Client() as client:
+            r = client.post(
                 f'https://{self.instance}/api/auth/session/generate',
                 json={'appSecret': app_secret}
             )
             data = r.json()
             return data
 
-    @async_to_sync
-    async def create_app(self, callback_url):
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
+    def create_app(self, callback_url):
+        with httpx.Client() as client:
+            r = client.post(
                 f'https://{self.instance}/api/app/create',
                 json={
                     'name': 'fedicross',
@@ -31,14 +29,13 @@ class Misskey:
             data = r.json()
             app_secret = data['secret']
 
-            data = await self.get_session(app_secret)
+            data = self.get_session(app_secret)
 
             return {'client_secret': app_secret, 'client_id': data['token'], 'authorize_url': data['url'], 'detail': data}
 
-    @async_to_sync
-    async def user_authenticate(self, client_secret, client_id, callback_url, token):
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
+    def user_authenticate(self, client_secret, client_id, callback_url, token):
+        with httpx.Client() as client:
+            r = client.post(
                 f'https://{self.instance}/api/auth/session/userkey',
                 json={
                     'appSecret': client_secret,

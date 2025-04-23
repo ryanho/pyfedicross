@@ -1,15 +1,13 @@
 import httpx
-from asgiref.sync import async_to_sync
 
 
 class Mastodon:
     def __init__(self, instance):
         self.instance = instance
 
-    @async_to_sync
-    async def create_app(self, callback_url):
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
+    def create_app(self, callback_url):
+        with httpx.Client() as client:
+            r = client.post(
                 f'https://{self.instance}/api/v1/apps',
                 json={
                     'client_name': 'fedicross',
@@ -28,10 +26,9 @@ class Mastodon:
 
             return {'client_secret': client_secret, 'client_id': client_id, 'authorize_url': url, 'detail': data}
 
-    @async_to_sync
-    async def user_authenticate(self, client_secret, client_id, callback_url, code):
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
+    def user_authenticate(self, client_secret, client_id, callback_url, code):
+        with httpx.Client() as client:
+            r = client.post(
                 f'https://{self.instance}/oauth/token',
                 json={
                     'client_id': client_id,
@@ -45,7 +42,7 @@ class Mastodon:
             data = r.json()
             access_token = data['access_token']
 
-            r = await client.get(
+            r = client.get(
                 f'https://{self.instance}/api/v1/accounts/verify_credentials',
                 headers={
                     'Authorization': f'Bearer {access_token}'

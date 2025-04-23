@@ -3,7 +3,6 @@ from accounts.models import FediverseApp
 from .misskey import Misskey
 from .mastodon import Mastodon
 from django.contrib.auth import authenticate
-from asgiref.sync import async_to_sync
 
 
 class FediverseLogin:
@@ -60,7 +59,7 @@ class FediverseLogin:
     def authorize(self):
         app = self.get_app()
         if app.software == 'misskey':
-            session = async_to_sync(self.api.get_session)(app.client_secret)
+            session = self.api.get_session(app.client_secret)
             return session['url']
         return app.authorize_url
 
@@ -71,14 +70,13 @@ class FediverseLogin:
                             app=app, avatar=auth_user['avatar'])
         return user
 
-    @async_to_sync
-    async def check_instance(self):
-        async with httpx.AsyncClient() as client:
-            r = await client.get(f'https://{self.instance}/.well-known/nodeinfo')
+    def check_instance(self):
+        with httpx.Client() as client:
+            r = client.get(f'https://{self.instance}/.well-known/nodeinfo')
             data = r.json()
 
             if len(data['links']) > 0:
-                node_info = await client.get(data['links'][0]['href'])
+                node_info = client.get(data['links'][0]['href'])
                 self.software = node_info.json()['software']['name']
 
             return self.software

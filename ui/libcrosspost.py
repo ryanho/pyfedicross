@@ -2,18 +2,16 @@ import httpx
 from django.conf import settings
 from accounts.models import SocialNetwork
 from authlib.integrations.httpx_client import OAuth1Auth
-from asgiref.sync import async_to_sync
 
 
-@async_to_sync
-async def post_to_misskey(domain, token, content, files=None):
-    async with httpx.AsyncClient() as client:
+def post_to_misskey(domain, token, content, files=None):
+    with httpx.Client() as client:
         media_ids = []
         file_detail = []
 
         if files:
             for f in files:
-                r = await client.post(f'https://{domain}/api/drive/files/create', data={'i': token}, files={'file': f},
+                r = client.post(f'https://{domain}/api/drive/files/create', data={'i': token}, files={'file': f},
                                headers={
                                    'user-agent': 'fedicross/0.1',
                                }, timeout=1800)
@@ -24,7 +22,7 @@ async def post_to_misskey(domain, token, content, files=None):
         data = {'text': content, 'i': token}
         if len(media_ids) > 0:
             data['fileIds'] = media_ids
-        r = await client.post(f'https://{domain}/api/notes/create',
+        r = client.post(f'https://{domain}/api/notes/create',
                        json=data,
                        headers={
                            'user-agent': 'fedicross/0.1',
@@ -34,15 +32,14 @@ async def post_to_misskey(domain, token, content, files=None):
         return file_detail, result['id']
 
 
-@async_to_sync
-async def post_to_mstdn(domain, token, content, files=None):
-    async with httpx.AsyncClient() as client:
+def post_to_mstdn(domain, token, content, files=None):
+    with httpx.Client() as client:
         media_ids = []
         file_detail = []
 
         if files:
             for f in files:
-                r = await client.post(f'https://{domain}/api/v1/media', files={'file': f},
+                r = client.post(f'https://{domain}/api/v1/media', files={'file': f},
                                headers={
                                    'Authorization': f'Bearer {token}',
                                    'user-agent': 'fedicross/0.1',
@@ -51,7 +48,7 @@ async def post_to_mstdn(domain, token, content, files=None):
                 media_ids.append(result['id'])
                 file_detail.append(result['preview_url'])
 
-        r = await client.post(f'https://{domain}/api/v1/statuses',
+        r = client.post(f'https://{domain}/api/v1/statuses',
                        data={'status': content, 'media_ids[]': media_ids, 'visibility': 'direct'},
                        headers={
                            'Authorization': f'Bearer {token}',
@@ -62,9 +59,8 @@ async def post_to_mstdn(domain, token, content, files=None):
         return file_detail, result['id']
 
 
-@async_to_sync
-async def post_to_plurk(auth, content, file_detail, toot_url, is_sensitive=False):
-    async with httpx.AsyncClient() as client:
+def post_to_plurk(auth, content, file_detail, toot_url, is_sensitive=False):
+    with httpx.Client() as client:
         mstdn_content = ''
         if file_detail:
             for i in file_detail:
@@ -97,7 +93,7 @@ async def post_to_plurk(auth, content, file_detail, toot_url, is_sensitive=False
             {'Content-Type': 'application/x-www-form-urlencoded'},
             {'content': post_content, 'qualifier': 'says'}
         )
-        resp = await client.post(uri, headers=headers, data=body, timeout=300)
+        resp = client.post(uri, headers=headers, data=body, timeout=300)
         if resp.status_code == 200:
             return True, resp.text
         else:
