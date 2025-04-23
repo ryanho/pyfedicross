@@ -22,7 +22,7 @@ class FediverseApp(models.Model):
 
 class User(AbstractUser):
     avatar = models.URLField('Avatar', blank=True)
-    app = models.ForeignKey(FediverseApp, on_delete=models.SET_NULL, null=True, blank=True)
+    app = models.OneToOneField(FediverseApp, on_delete=models.SET_NULL, null=True, blank=True)
     access_token = models.CharField('Access Token', max_length=255, blank=True)
 
 
