@@ -14,6 +14,43 @@
 ## 安裝
 強烈建議透過Docker Compose。也可以直接使用我建置的服務。
 
+複製這個 repo
+
+`git clone https://github.com/ryanho/pyfedicross.git`
+
+`cd pyfedicross`
+
+`mkdir data; cp pyfedicross/.env.example ./data/.env`
+
+根據需求修改 ./data/.env 的內容
+
+```aiignore
+DEBUG=off # Debug 模式
+SECRET_KEY= # Django 的加密金鑰
+ALLOWED_HOSTS= # 此服務綁定的網域，使用逗號分隔
+DATABASE_URL=sqlite:///db.sqlite
+TIME_ZONE=UTC # 時區
+LANGUAGE_CODE=en-us # 語系
+CACHE_URL=filecache:////tmp/django_cache # 快取位置，通常不需要更改
+PLURK_CONSUMER_KEY= # Plurk 的 Oauth 金鑰
+PLURK_CONSUMER_SECRET= # Plurk 的 Oauth 密鑰
+CSRF_TRUSTED_ORIGINS= # 允許跨站存取的來源網址，使用逗號分隔，格式為 https://domain.tld
+DRAMATIQ_BROKER_URL=localhost:6379 # 工作排程器使用的 redis 位址，通常不需要更改
+```
+
+修改 app.template，拿掉開頭的註解，把 .example.com 修改為符合上面 ALLOWED_HOSTS 的值。  
+
+`#server_name .example.com;`
+
+
+打包容器
+
+`docker compose build`
+
+啟動服務
+
+`docker compose up -d`
+
 ## 使用
 在fedicross首頁輸入要登入的實例網域（例如mastodon.social或misskey.io），確認要提供的權限並按下同意，接著會轉回fedicross首頁。
 
