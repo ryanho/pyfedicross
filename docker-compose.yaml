@@ -37,7 +37,6 @@ services:
     ports:
      - "80:80"
     networks:
-      #- shared
       - external_network
       - internal_network
 
@@ -45,5 +44,3 @@ networks:
   external_network:
   internal_network:
     internal: true
-#  shared:
-#    external: true

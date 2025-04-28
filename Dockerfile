@@ -1,13 +1,11 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 ENV DOCKER_ENVIRON=1
 
-RUN pip install poetry
-
 WORKDIR /app
-COPY poetry.lock pyproject.toml /app/
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-interaction --no-ansi
+COPY pyproject.toml /app/
+RUN python -m venv venv \
+  && venv/bin/pip install .
 
 COPY . /app
 
