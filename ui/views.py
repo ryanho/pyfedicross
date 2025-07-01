@@ -135,7 +135,7 @@ def webhook(request):
             if renote_id:
                 qualifier = 'shares'
                 note_files += result['body']['note']['renote']['files']
-                note_url = f"{result['server']}/notes/{result['body']['note']['renoteId']}"
+                note_url = result['body']['note']['renote']['uri']
                 # 如果是轉發但轉發的貼文沒有附件
                 if content is None and len(note_files) == 0:
                     return HttpResponse('OK')
