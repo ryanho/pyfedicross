@@ -123,15 +123,21 @@ def webhook(request):
         result = json.loads(request.body)
         user = get_object_or_404(User, app__software='misskey', app__webhook_secret=secret)
 
+        # 擷取json內容
+        # with open('/tmp/content.json', 'a', encoding='utf-8') as f:
+        #     json.dump(result, f, ensure_ascii=False, indent=4)
+
+        # 只處理新的公開貼文，不處理回覆
         if result['body']['note']['replyId'] is None and result['body']['note']['visibility'] == 'public':
             is_sensitive = False
             qualifier = 'says'
             content = result['body']['note']['text']
-            note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
             note_files = result['body']['note'].get('files', list())
             renote_id = result['body']['note']['renoteId']
 
             # 轉發或引用
+            # 無論是轉發或引用，都要有圖片內容才會處理
+            # 如果是引用則會確認是否有額外內文，有的話使用note來源url，沒有則使用引用的遠端url
             if renote_id:
                 qualifier = 'shares'
                 note_files += result['body']['note']['renote']['files']
@@ -144,6 +150,7 @@ def webhook(request):
                 content = ''
 
             if content:
+                note_url = f"{result['server']}/notes/{result['body']['note']['id']}"
                 mention_user = re.findall(r'@[\w.-]+(?:@[\w.-]+\.\w+)?', content)
                 if mention_user:
                     for at_user in mention_user:
@@ -157,6 +164,7 @@ def webhook(request):
                         item = next(item for item in emojis if item["name"] == raw.strip(':'))
                         content = content.replace(raw, f' {item["url"]} ')
 
+            # 如果貼文使用內容警告或檔案帶有敏感標記，則使用plurk的r18標記
             if result['body']['note']['cw']:
                 content = result['body']['note']['cw'] + '\n' + content
                 is_sensitive = True
